@@ -4,6 +4,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -26,75 +28,59 @@ public class Main {
     public Main() {
         super();
 
-        //System Property SetUp
         System.setProperty(WEB_DRIVER_ID, WEB_DRIVER_PATH);
 
-        //Driver SetUp
         driver = new ChromeDriver();
-        //driver1 = new ChromeDriver();
 
-        base_url = "https://www.cgs.or.kr/business/esg_tab04.jsp";
-        //base_url = "http://esg.cgs.or.kr/login/login.jsp";
+        base_url = "https://esg.krx.co.kr/contents/02/02020000/ESG02020000.jsp";
     }
 
     public void crawl() {
 
         try {
             driver.get(base_url);
-            /*
-            driver.findElement(By.xpath("//*[@id=\"loginID\"]")).sendKeys("fstc");
-            driver.findElement(By.xpath("//*[@id=\"loginPW\"]")).sendKeys("fst23841!@");
 
-            driver.findElement(By.xpath("//*[@id=\"loginform\"]/button")).click();
-
-            System.out.println("1 로그인 성공" + driver.getCurrentUrl());
-
-            driver1.get(base_url);
-            driver1.findElement(By.xpath("//*[@id=\"loginID\"]")).sendKeys("fstc");
-            driver1.findElement(By.xpath("//*[@id=\"loginPW\"]")).sendKeys("fst23841!@");
-
-            driver1.findElement(By.xpath("//*[@id=\"loginform\"]/button")).click();
-
-            System.out.println("2 로그인 성공" + driver1.getCurrentUrl());
-
-            driver.get("http://esg.cgs.or.kr/result/result_tab01.jsp?sel_esgCode=E&sel_regYear=2023");
-            */
-
-
-
-
-
-            //List<WebElement> elementList = driver.findElements(By.className("guide_btn"));
-
-            //for(WebElement element : elementList) {
                 driver.manage().timeouts().implicitlyWait(100000, TimeUnit.MILLISECONDS);
-                /*
-                String viewguide = element.getAttribute("onclick");
-                String scd = viewguide.split("\'")[1];
-                String vnum = viewguide.split("\'")[3];
-                 */
 
-                String url = "https://www.cgs.or.kr/business/esg_tab04.jsp?pg=1&pp=1035&skey=&svalue=&sfyear=2022&styear=2022&sgtype=&sgrade=#ui_contents";
+                String url = "https://esg.krx.co.kr/contents/02/02020000/ESG02020000.jsp";
                 driver.navigate().to(url);
-                //Thread.sleep(500);
+
+                Select year = new Select(driver.findElement(By.name("sch_yy")));
+
+                year.selectByVisibleText("2023");
+
+                driver.findElement(By.id("btnid8f14e45fceea167a5a36dedd4bea2543")).click();
+
+                Thread.sleep(3000);
+
+                for(int i=0 ; i<8 ; i++) {
+                    for(int j = 0 ; j < 10 ; j++){
+                        List<WebElement> elements = driver.findElements(By.xpath("//*[@id=\"gridtable6512bd43d9caa6e02c990b0a82652dca\"]/tbody/tr[1]"));
+                        int n = 1;
+                        for(WebElement e : elements) {
+                            System.out.println((i*10 + j)*10 + n + "|");
+                            System.out.print(e.findElement(By.xpath(".//td[1]")).getText() + "|");
+                            System.out.print(e.findElement(By.xpath(".//td[2]/span")).getText() + "|");
+                            System.out.print(e.findElement(By.xpath(".//td[3]/span")).getText() + "|");
+                            System.out.print(e.findElement(By.xpath(".//td[4]/span")).getText() + "|");
+                            System.out.print(e.findElement(By.xpath(".//td[5]/span")).getText() + "|");
+
+                            System.out.print(e.findElement(By.xpath(".//td[6]/span")).getText() + "|");
+                            System.out.print(e.findElement(By.xpath(".//td[7]/span")).getText() + "|");
+                            System.out.print(e.findElement(By.xpath(".//td[8]/span")).getText() + "|");
+                            System.out.print(e.findElement(By.xpath(".//td[9]/span")).getText() + "|");
+                            System.out.print(e.findElement(By.xpath(".//td[10]/span")).getText() + "|");
+
+                            n++;
+                        }
+
+                        System.out.println();
+                    }
+                }
 
                 List<WebElement> elements = driver.findElements(By.cssSelector("body > div.fixed_bn > div.sub_business > div.business_view > div.rating-wrap > div.business_board > table > tbody > tr"));
 
                 for(WebElement e : elements) {
-                    /*System.out.print(driver1.findElement(By.xpath("/html/body/div/ol/li/em")).getText() + "|");
-                    System.out.print(driver1.findElement(By.xpath("/html/body/div/ol/li")).getText().split("\n")[1] + "|");
-                    System.out.print(" |");
-                    System.out.print(" |");
-                    System.out.print(" |");
-                    System.out.print(driver1.findElement(By.xpath("/html/body/div/div[2]/table/tbody/tr[1]/td[1]")).getText() + "|");
-                    System.out.print(driver1.findElement(By.xpath("/html/body/div/div[2]/table/tbody/tr[1]/td[2]")).getText() + "|");
-                    System.out.print(driver1.findElement(By.xpath("/html/body/div/div[2]/table/tbody/tr[2]/td")).getText() + "|");
-                    System.out.print(e.findElement(By.xpath(".//td[1]")).getText() + "|");
-                    System.out.print(e.findElement(By.xpath(".//td[2]")).getText() + "|");
-                    System.out.print(e.findElement(By.xpath(".//td[3]")).getText() + "|");
-                    System.out.print(e.findElement(By.xpath(".//td[4]")).getText() + "|");
-                    System.out.print(e.findElement(By.xpath(".//td[5]")).getText() + "|/n");
-                     */
                     System.out.print(e.findElement(By.xpath(".//td[1]/em")).getText() + "|");
                     System.out.print(e.findElement(By.xpath(".//td[2]")).getText() + "|");
                     System.out.print(e.findElement(By.xpath(".//td[3]")).getText() + "|");
