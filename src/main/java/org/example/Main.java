@@ -4,10 +4,10 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.support.ui.Select;
-import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.*;
 
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 public class Main {
@@ -21,7 +21,7 @@ public class Main {
     //private WebDriver driver1;
 
     public static final String WEB_DRIVER_ID = "webdriver.chrome.driver";
-    public static final String WEB_DRIVER_PATH = "C:\\Users\\상우\\IdeaProjects\\untitled/chromedriver.exe";
+    public static final String WEB_DRIVER_PATH = "C:\\Users\\22012\\IdeaProjects\\crawler\\chromedriver.exe";
 
     private String base_url;
 
@@ -32,7 +32,7 @@ public class Main {
 
         driver = new ChromeDriver();
 
-        base_url = "https://esg.krx.co.kr/contents/02/02020000/ESG02020000.jsp";
+        base_url = "https://www.hometax.go.kr/websquare/websquare.html?w2xPath=/ui/pp/index_pp.xml";
     }
 
     public void crawl() {
@@ -40,65 +40,52 @@ public class Main {
         try {
             driver.get(base_url);
 
-                driver.manage().timeouts().implicitlyWait(100000, TimeUnit.MILLISECONDS);
+            String defaultWindow = driver.getWindowHandle();
 
-                String url = "https://esg.krx.co.kr/contents/02/02020000/ESG02020000.jsp";
-                driver.navigate().to(url);
+            driver.manage().timeouts().implicitlyWait(100000, TimeUnit.MILLISECONDS);
+            driver.manage().window().maximize();
 
-                Select year = new Select(driver.findElement(By.name("sch_yy")));
+            JavascriptExecutor js = (JavascriptExecutor) driver;
+            js.executeScript("window.scrollBy(0,350)", "");
 
-                year.selectByVisibleText("2023");
+            driver.switchTo().frame("txppIframe");
+            Thread.sleep(1000);
 
-                driver.findElement(By.id("btnid8f14e45fceea167a5a36dedd4bea2543")).click();
+            /* 계산페이지 이동 */
+            driver.findElement(By.xpath("//*[@id=\"prcpSrvcMenuA7\"]")).click();
+            Thread.sleep(2000);
 
-                Thread.sleep(3000);
+            driver.switchTo().frame("txppIframe");
+            Thread.sleep(1000);
 
-                for(int i=0 ; i<8 ; i++) {
-                    for(int j = 0 ; j < 10 ; j++){
-                        List<WebElement> elements = driver.findElements(By.xpath("//*[@id=\"gridtable6512bd43d9caa6e02c990b0a82652dca\"]/tbody/tr[1]"));
-                        int n = 1;
-                        for(WebElement e : elements) {
-                            System.out.println((i*10 + j)*10 + n + "|");
-                            System.out.print(e.findElement(By.xpath(".//td[1]")).getText() + "|");
-                            System.out.print(e.findElement(By.xpath(".//td[2]/span")).getText() + "|");
-                            System.out.print(e.findElement(By.xpath(".//td[3]/span")).getText() + "|");
-                            System.out.print(e.findElement(By.xpath(".//td[4]/span")).getText() + "|");
-                            System.out.print(e.findElement(By.xpath(".//td[5]/span")).getText() + "|");
+            driver.findElement(By.xpath("//*[@id=\"textbox1033\"]")).click();
+            Thread.sleep(1000);
+            /* 23년 계산페이지 이동 */
+            driver.findElement(By.xpath("//*[@id=\"a_1905100000\"]")).click();
+            Thread.sleep(5000);
 
-                            System.out.print(e.findElement(By.xpath(".//td[6]/span")).getText() + "|");
-                            System.out.print(e.findElement(By.xpath(".//td[7]/span")).getText() + "|");
-                            System.out.print(e.findElement(By.xpath(".//td[8]/span")).getText() + "|");
-                            System.out.print(e.findElement(By.xpath(".//td[9]/span")).getText() + "|");
-                            System.out.print(e.findElement(By.xpath(".//td[10]/span")).getText() + "|");
+            driver.findElement(By.xpath("//*[@id=\"btnTotaSnwAmt\"]")).click();
+            Thread.sleep(1000);
 
-                            n++;
-                        }
+            Set<String> s1= driver.getWindowHandles();
+            for(String hwnd : s1) {
+                driver.switchTo().window(hwnd);
+            }
 
-                        System.out.println();
-                    }
-                }
+            Thread.sleep(1000);
 
-                List<WebElement> elements = driver.findElements(By.cssSelector("body > div.fixed_bn > div.sub_business > div.business_view > div.rating-wrap > div.business_board > table > tbody > tr"));
+            int pay_all = 26400000;
+            int tax_already = 0;
 
-                for(WebElement e : elements) {
-                    System.out.print(e.findElement(By.xpath(".//td[1]/em")).getText() + "|");
-                    System.out.print(e.findElement(By.xpath(".//td[2]")).getText() + "|");
-                    System.out.print(e.findElement(By.xpath(".//td[3]")).getText() + "|");
-                    System.out.print(e.findElement(By.xpath(".//td[4]")).getText() + "|");
-                    System.out.print(e.findElement(By.xpath(".//td[5]")).getText() + "|");
-                    System.out.print(e.findElement(By.xpath(".//td[6]")).getText() + "|");
-                    System.out.print(e.findElement(By.xpath(".//td[7]")).getText() + "|");
-                    System.out.print(e.findElement(By.xpath(".//td[8]")).getText() + "|");
-                    System.out.print(e.findElement(By.xpath(".//td[9]")).getText() + "|/n");
-                }
+            driver.findElement(By.xpath("//*[@id=\"input7001\"]")).sendKeys(String.valueOf(pay_all));
+            Thread.sleep(10);
+            driver.findElement(By.xpath("//*[@id=\"btnAmt\"]")).click();
+            Thread.sleep(10);
+            driver.findElement(By.xpath("//*[@id=\"input7507\"]")).sendKeys(String.valueOf(tax_already));
+            driver.findElement(By.xpath("//*[@id=\"trigger52\"]")).click();
+            Thread.sleep(500);
 
-
-
-
-
-
-
-            //}
+            driver.switchTo().window(defaultWindow);
 
 
         } catch (Exception e) {
