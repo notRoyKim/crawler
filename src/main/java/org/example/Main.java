@@ -42,16 +42,12 @@ public class Main {
         try {
             driver.get(base_url);
             /*
-            driver.findElement(By.xpath("//*[@id=\"loginID\"]")).sendKeys("fstc");
-            driver.findElement(By.xpath("//*[@id=\"loginPW\"]")).sendKeys("fst23841!@");
 
             driver.findElement(By.xpath("//*[@id=\"loginform\"]/button")).click();
 
             System.out.println("1 로그인 성공" + driver.getCurrentUrl());
 
             driver1.get(base_url);
-            driver1.findElement(By.xpath("//*[@id=\"loginID\"]")).sendKeys("fstc");
-            driver1.findElement(By.xpath("//*[@id=\"loginPW\"]")).sendKeys("fst23841!@");
 
             driver1.findElement(By.xpath("//*[@id=\"loginform\"]/button")).click();
 
